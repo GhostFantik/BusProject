@@ -1,0 +1,82 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <form action="{% url 'db:index' %}" method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-10">{{ form }}</div>
+            <div class="col-2">
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Дата</th>
+                <th scope="col">Автобус</th>
+                <th scope="col">Водитель</th>
+                <th scope="col">Старт TIME</th>
+                <th scope="col">Финиш TIME</th>
+                <th scope="col">Наличный расчёт</th>
+                <th scope="col">Красный валидатор</th>
+                <th scope="col">Чёрный валидатор</th>
+                <th scope="col">Пробег</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for survey in data %}
+                <tr>
+                    <th scope="row">{{ survey.date }}</th>
+                    <td>{{  survey.vehicle.plate }}</td>
+                    <td><table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ФИО</th>
+                                <th scope="col">Права</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in survey.users.0 %}
+                                <tr>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.licence }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table></td>
+                    <td>{{ survey.startTime }}</td>
+                    <td>{{ survey.endTime }}</td>
+                    <td>{{ survey.cashPassengers }}</td>
+                    <td>{{ survey.redCounter }}</td>
+                    <td>{{ survey.blackCounter }}</td>
+                    <td>{{ survey.distance }}</td>
+                    <td><table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Теги</th>
+                                <th scope="col">Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for issue in survey.issues.0 %}
+                                <tr>
+                                    <td>
+                                        {% for tag in issue.tags %}
+                                        <p>{{ tag.name }}</p>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ issue.description }}</td>
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+     {% for s in data %}
+
+     {% endfor %}
+{% endblock %}
